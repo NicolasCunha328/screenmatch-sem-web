@@ -7,13 +7,13 @@ public enum Categoria {
     DRAMA("Drama"),
     CRIME("Crime");
 
-    private String categoriaOmdb;
+    private final String categoriaOmdb;
 
     Categoria(String categoriaOmdb){
         this.categoriaOmdb = categoriaOmdb;
     }
 
-    public static Categoria fromString(String text){
+    public static Categoria fromString(String text){ // permite converter uma string (do gênero da API) para o enum Categoria correspondente, com tratamento para categorias não encontradas.
         for (Categoria categoria : Categoria.values()){
             if (categoria.categoriaOmdb.equalsIgnoreCase(text)){
                 return categoria;

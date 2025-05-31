@@ -10,16 +10,16 @@ import br.com.alura.screenmatch.service.ConverteDados;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Principal {
+public class Principal { // contém a lógica principal da aplicação, gerenciando o menu de interação com o usuário e orquestrando as operações de busca de séries e episódios
 
-    private Scanner leitura = new Scanner(System.in);
-    private ConsumoApi consumo = new ConsumoApi();
-    private ConverteDados conversor = new ConverteDados();
+    private final Scanner leitura = new Scanner(System.in);
+    private final ConsumoApi consumo = new ConsumoApi(); // Utiliza ConsumoApi para requisições à API do OMDB e ConverteDados para processar respostas JSON.
+    private final ConverteDados conversor = new ConverteDados();
     private final String ENDERECO = "https://www.omdbapi.com/?t=";
     private final String API_KEY = "&apikey=13e18b3";
-    private List<DadosSerie> dadosSeries = new ArrayList<>();
+    private final List<DadosSerie> dadosSeries = new ArrayList<>();
 
-    public void exibeMenu() {
+    public void exibeMenu() { // gerencia um menu interativo para buscar séries, episódios ou listar séries já buscadas
         var opcao = -1;
         while(opcao != 0) {
             var menu = """
@@ -28,7 +28,7 @@ public class Principal {
                     2 - Buscar episódios
                     3 - Listar séries buscadas
                     
-                    0 - Sair                                 
+                    0 - Sair
                     """;
 
             System.out.println(menu);
@@ -54,13 +54,13 @@ public class Principal {
         }
     }
 
-    private void buscarSerieWeb() {
+    private void buscarSerieWeb() { // obtém dados de uma série da web e os adiciona a uma lista interna
         DadosSerie dados = getDadosSerie();
         dadosSeries.add(dados);
         System.out.println(dados);
     }
 
-    private DadosSerie getDadosSerie() {
+    private DadosSerie getDadosSerie() { // solicita o nome da série ao usuário, faz a requisição à API e converte o JSON em DadosSerie
         System.out.println("Digite o nome da série para busca");
         var nomeSerie = leitura.nextLine();
         var json = consumo.obterDados(ENDERECO + nomeSerie.replace(" ", "+") + API_KEY);
@@ -68,7 +68,7 @@ public class Principal {
         return dados;
     }
 
-    private void buscarEpisodioPorSerie(){
+    private void buscarEpisodioPorSerie(){ // busca e exibe todos os episódios de uma série, iterando por temporada
         DadosSerie dadosSerie = getDadosSerie();
         List<DadosTemporada> temporadas = new ArrayList<>();
 
@@ -80,13 +80,13 @@ public class Principal {
         temporadas.forEach(System.out::println);
     }
 
-    private void listarSeriesBuscadas(){
+    private void listarSeriesBuscadas(){ // converte a lista de DadosSerie em objetos Serie e os exibe, ordenando por gênero
         List<Serie> series;
         series = dadosSeries.stream()
-                        .map(Serie::new)
-                                .toList();
+                        .map(Serie::new) // isso é uma referência de construtor (method reference). Para cada elemento em dadosSeries, ele chama o construtor da classe Serie que aceita o tipo de elemento de dadosSeries como argumento. Essencialmente, ele está criando um novo objeto Serie para cada item em dadosSeries
+                        .toList(); // esta é uma operação que coleta todos os elementos processados pelo Stream em uma nova List. O resultado desta operação é atribuído de volta à variável series
         series.stream()
-                .sorted(Comparator.comparing(Serie::getGenero))
+                .sorted(Comparator.comparing(Serie::getGenero)) // isso cria um Comparator que compara objetos Serie com base no valor retornado pelo metodo getGenero() de cada Serie. Ou seja, ele ordena as séries em ordem crescente de seus gêneros. Se getGenero() retorna um String, a ordenação será lexicográfica (alfabética)
                 .forEach(System.out::println);
     }
 }

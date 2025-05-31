@@ -6,14 +6,14 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class ConsumoApi {
+public class ConsumoApi { // realiza requisições HTTP para consumir dados de APIs externas.
 
-    public String obterDados(String endereco) {
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
+    public String obterDados(String endereco) { // recebe uma URL
+        HttpClient client = HttpClient.newHttpClient(); // criação do cliente HTTP
+        HttpRequest request = HttpRequest.newBuilder() // construção de uma requisição com a URI fornecida
                 .uri(URI.create(endereco))
                 .build();
-        HttpResponse<String> response = null;
+        HttpResponse<String> response = null; // envia e extrai a requisição como uma String (JSON)
         try {
             response = client
                     .send(request, HttpResponse.BodyHandlers.ofString());
@@ -21,7 +21,7 @@ public class ConsumoApi {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
-        }
+        } // metodo try catch funciona para tratar exceções
 
         String json = response.body();
         return json;

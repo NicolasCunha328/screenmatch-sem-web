@@ -3,7 +3,7 @@ package br.com.alura.screenmatch.model;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-public class Episodio {
+public class Episodio { // representa um episódio de uma série com atributos mais ricos e lógicas de negócio
     private Integer temporada;
     private String titulo;
     private Integer numeroEpisodio;
