@@ -89,10 +89,7 @@ public class Principal { // contém a lógica principal da aplicação, gerencia
     }
 
     private void listarSeriesBuscadas(){ // converte a lista de DadosSerie em objetos Serie e os exibe, ordenando por gênero
-        List<Serie> series;
-        series = dadosSeries.stream()
-                        .map(Serie::new) // isso é uma referência de construtor (method reference). Para cada elemento em dadosSeries, ele chama o construtor da classe Serie que aceita o tipo de elemento de dadosSeries como argumento. Essencialmente, ele está criando um novo objeto Serie para cada item em dadosSeries
-                        .toList(); // esta é uma operação que coleta todos os elementos processados pelo Stream em uma nova List. O resultado desta operação é atribuído de volta à variável series
+        List<Serie> series = repositorio.findAll();
         series.stream()
                 .sorted(Comparator.comparing(Serie::getGenero)) // isso cria um Comparator que compara objetos Serie com base no valor retornado pelo metodo getGenero() de cada Serie. Ou seja, ele ordena as séries em ordem crescente de seus gêneros. Se getGenero() retorna um String, a ordenação será lexicográfica (alfabética)
                 .forEach(System.out::println);
