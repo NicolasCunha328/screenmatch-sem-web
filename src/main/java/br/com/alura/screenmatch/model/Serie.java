@@ -22,7 +22,7 @@ public class Serie { // representa uma série com atributos mais ricos e lógica
     private Categoria genero;
     private String sinopse;
     private String poster;
-    @OneToMany(mappedBy = "serie")
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL)
     private List<Episodio> episodios = new ArrayList<>();
 
     public Serie() {}

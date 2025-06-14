@@ -20,6 +20,7 @@ public class Principal { // contém a lógica principal da aplicação, gerencia
     private final String API_KEY = "&apikey=13e18b3";
     private final List<DadosSerie> dadosSeries = new ArrayList<>();
     private SerieRepository repositorio;
+    List<Serie> series = new ArrayList<>();
 
     public Principal(SerieRepository repositorio){
         this.repositorio = repositorio;
@@ -77,19 +78,39 @@ public class Principal { // contém a lógica principal da aplicação, gerencia
     }
 
     private void buscarEpisodioPorSerie(){ // busca e exibe todos os episódios de uma série, iterando por temporada
-        DadosSerie dadosSerie = getDadosSerie();
-        List<DadosTemporada> temporadas = new ArrayList<>();
+        listarSeriesBuscadas();
+        System.out.println("Escolha uma série pelo nome:");
+        var nomeSerie = leitura.nextLine();
 
-        for (int i = 1; i <= dadosSerie.totalTemporadas(); i++) {
-            var json = consumo.obterDados(ENDERECO + dadosSerie.titulo().replace(" ", "+") + "&season=" + i + API_KEY);
-            DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
-            temporadas.add(dadosTemporada);
+        Optional<Serie> serie = series.stream()
+                .filter(s -> s.getTitulo().toLowerCase().contains(nomeSerie.toLowerCase()))
+                .findFirst();
+
+        if (serie.isPresent()){
+            var serieEncontrada = serie.get();
+            List<DadosTemporada> temporadas = new ArrayList<>();
+
+            for (int i = 1; i <= serieEncontrada.getTotalTemporadas(); i++) {
+                var json = consumo.obterDados(ENDERECO + serieEncontrada.getTitulo().replace(" ", "+") + "&season=" + i + API_KEY);
+                DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
+                temporadas.add(dadosTemporada);
+            }
+            temporadas.forEach(System.out::println);
+
+            List<Episodio> episodios = temporadas.stream()
+                    .flatMap(d -> d.episodios().stream()
+                            .map(e -> new Episodio(d.numero(), e)))
+                    .collect(Collectors.toList());
+            serieEncontrada.setEpisodios(episodios);
+            repositorio.save(serieEncontrada);
+        } else {
+            System.out.println("Série não encontrada!");
         }
-        temporadas.forEach(System.out::println);
+
     }
 
     private void listarSeriesBuscadas(){ // converte a lista de DadosSerie em objetos Serie e os exibe, ordenando por gênero
-        List<Serie> series = repositorio.findAll();
+        series = repositorio.findAll();
         series.stream()
                 .sorted(Comparator.comparing(Serie::getGenero)) // isso cria um Comparator que compara objetos Serie com base no valor retornado pelo metodo getGenero() de cada Serie. Ou seja, ele ordena as séries em ordem crescente de seus gêneros. Se getGenero() retorna um String, a ordenação será lexicográfica (alfabética)
                 .forEach(System.out::println);

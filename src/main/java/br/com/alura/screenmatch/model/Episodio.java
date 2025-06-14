@@ -19,6 +19,8 @@ public class Episodio { // representa um episódio de uma série com atributos m
     @ManyToOne
     private Serie serie;
 
+    public Episodio(){}
+
     public Episodio(Integer numeroTemporada, DadosEpisodio dadosEpisodio){
         this.temporada = numeroTemporada;
         this.titulo = dadosEpisodio.titulo();
