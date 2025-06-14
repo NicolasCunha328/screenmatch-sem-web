@@ -22,7 +22,7 @@ public class Serie { // representa uma série com atributos mais ricos e lógica
     private Categoria genero;
     private String sinopse;
     private String poster;
-    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Episodio> episodios = new ArrayList<>();
 
     public Serie() {}
@@ -42,6 +42,7 @@ public class Serie { // representa uma série com atributos mais ricos e lógica
     }
 
     public void setEpisodios(List<Episodio> episodios) {
+        episodios.forEach(e -> e.setSerie(this));
         this.episodios = episodios;
     }
 
@@ -118,6 +119,7 @@ public class Serie { // representa uma série com atributos mais ricos e lógica
                 ", avaliacao = " + avaliacao +
                 ", atores = " + atores + '\'' +
                 ", sinopse = " + sinopse + '\'' +
-                ", poster = " + poster + '\'';
+                ", poster = " + poster + '\'' +
+                ", episodios = " + episodios + '\'';
     }
 }
