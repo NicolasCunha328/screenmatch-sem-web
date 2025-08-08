@@ -36,6 +36,7 @@ public class Principal { // contém a lógica principal da aplicação, gerencia
                     6 - Top 5 Séries
                     7 - Buscar série por Categoria
                     8 - Buscar série por Temporada
+                    9 - Buscar episódios por trecho
                     
                     0 - Sair
                     """;
@@ -68,6 +69,9 @@ public class Principal { // contém a lógica principal da aplicação, gerencia
                     break;
                 case 8:
                     buscarSeriePorTemporada();
+                    break;
+                case 9:
+                    buscarEpisodioPorTrecho();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -175,9 +179,19 @@ public class Principal { // contém a lógica principal da aplicação, gerencia
         var numeroTemporadas = leitura.nextInt();
         System.out.println("Agora digite qual avaliação deseja");
         var avaliacaoTemporada = leitura.nextDouble();
-        List<Serie> seriesPorTemporadas = repositorio.findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(numeroTemporadas, avaliacaoTemporada);
+        List<Serie> seriesPorTemporadas = repositorio.seriePorTemporadaEAvaliacao(numeroTemporadas, avaliacaoTemporada);
         System.out.println("Séries com o total de " + numeroTemporadas + " temporadas e com " + avaliacaoTemporada + " de avaliação");
         seriesPorTemporadas.forEach(System.out::println);
+    }
+
+    private void buscarEpisodioPorTrecho(){
+        System.out.println("Qual nome do episódio para busca?");
+        var trechoEpisodio = leitura.nextLine();
+        List<Episodio> episodiosEncontrados = repositorio.trechoPorEpisodio(trechoEpisodio);
+        episodiosEncontrados.forEach(e ->
+                System.out.printf("Série: %s Temporada %s - Episodio %s - %s\n",
+                        e.getSerie().getTitulo(), e.getTemporada(),
+                        e.getNumeroEpisodio(), e.getTitulo()));
     }
 
 }
