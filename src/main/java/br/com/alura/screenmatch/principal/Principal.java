@@ -39,7 +39,7 @@ public class Principal { // contém a lógica principal da aplicação, gerencia
                     8 - Buscar série por Temporada
                     9 - Buscar episódios por trecho
                     10 - Top 5 episódios por Série
-                    11 - Episódiso por Ano de Lançamento
+                    11 - Episódios por Ano de Lançamento
                     
                     0 - Sair
                     """;
