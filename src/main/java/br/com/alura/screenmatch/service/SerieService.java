@@ -5,12 +5,18 @@ import br.com.alura.screenmatch.model.Serie;
 import br.com.alura.screenmatch.repository.SerieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class SerieService {
+
+    private List<SerieDTO> converteDados(List<Serie> series){
+        return series.stream()
+                .map(s -> new SerieDTO(s.getId(),s.getTitulo(),s.getTotalTemporadas(),s.getAvaliacao(),s.getAtores(),s.getGenero(),s.getSinopse(),s.getPoster()))
+                .collect(Collectors.toList());
+    }
 
     @Autowired
     private SerieRepository repositorio;
@@ -27,9 +33,14 @@ public class SerieService {
         return converteDados(repositorio.encontrarEpisodiosMaisRecentes());
     }
 
-    private List<SerieDTO> converteDados(List<Serie> series){
-        return series.stream()
-                .map(s -> new SerieDTO(s.getId(),s.getTitulo(),s.getTotalTemporadas(),s.getAvaliacao(),s.getAtores(),s.getGenero(),s.getSinopse(),s.getPoster()))
-                .collect(Collectors.toList());
+    public SerieDTO obterPorId(Long id) {
+        Optional<Serie> serie = repositorio.findById(id);
+
+        if (serie.isPresent()){
+            Serie s = serie.get();
+            return new SerieDTO(s.getId(),s.getTitulo(),s.getTotalTemporadas(),s.getAvaliacao(),s.getAtores(),s.getGenero(),s.getSinopse(),s.getPoster());
+        }
+
+        return null;
     }
 }
