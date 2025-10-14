@@ -17,14 +17,11 @@ public class ConsumoApi { // realiza requisições HTTP para consumir dados de A
         try {
             response = client
                     .send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         } // metodo try catch funciona para tratar exceções
 
-        String json = response.body();
-        return json;
+        return response.body();
     }
 
 }
